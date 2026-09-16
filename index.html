@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>就活イベントカレンダー</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"><script defer src="data.js"></script><script defer src="app.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">カレンダーへ</a>
+<header class="topbar">
+ <div class="brand"><svg aria-label="Career Calendar" width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M6 9h20v18H6zM6 15h20M11 5v8M21 5v8" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><path d="m11 21 3 3 7-7" stroke="currentColor" stroke-width="2.5"/></svg><span>CAREER<span class="brand-thin"> CALENDAR</span></span></div>
+ <div class="header-actions"><span class="snapshot">公開情報 · 2026.09.16 確認</span><button id="info" class="quiet">収録情報</button><button id="theme" class="icon" aria-label="表示テーマを切り替える" title="表示テーマを切り替える">◐</button></div>
+</header>
+<div class="shell">
+ <aside class="sidebar">
+  <div class="workspace-label">就活リサーチ</div><h1>イベントカレンダー</h1><p class="muted intro">出会いの予定を、ひとつに。</p>
+  <div class="sidebar-divider"></div>
+  <div class="label-row"><h2>会社・サービス</h2><div><button id="mobile-filter" class="text-btn">条件</button><button id="all" class="text-btn">全選択</button></div></div>
+  <div id="companies"></div>
+  <div class="sidebar-divider"></div>
+  <label class="field-label" for="area">開催エリア</label><select id="area"><option value="">すべてのエリア</option></select>
+  <h2 class="filter-title">表示する情報</h2>
+  <label class="check-option"><input type="checkbox" id="other" checked><span>掲載企業のイベント<small>社長メシ掲載・他社主催</small></span></label>
+  <label class="check-option"><input type="checkbox" id="reference"><span>参考日程も含める<small>二次情報・日付の要確認あり</small></span></label>
+  <label class="check-option"><input type="checkbox" id="ended" checked><span>本日の終了時刻経過分<small>9月16日の2講座</small></span></label>
+  <button id="reset" class="reset">絞り込みをリセット</button>
+  <div class="sidebar-note"><span class="status-dot"></span> 確認時点のスナップショット<p>自動更新ではありません。最新の受付状況は、各イベントの確認元をご覧ください。</p></div>
+ </aside>
+ <main id="main">
+  <section class="page-head"><div><div class="eyebrow">YOUR NEXT OPPORTUNITY</div><h2>次の出会いを見つける。</h2><p>6社・サービスの公開イベントを、日程から探せます。</p></div><button id="export" class="outline">CSVを保存 ↓</button></section>
+  <section class="summary-strip"><div><span class="summary-number" id="all-count">—</span><span>表示対象の日程</span></div><div><span class="summary-number" id="month-count">—</span><span id="period-label">この月の日程</span></div><div class="summary-date"><span>収録期間</span><strong id="range">2026.09 — 2027.06</strong></div><span class="small-note">同日の午前・午後は1件に集約</span></section>
+  <section class="calendar-card">
+   <div class="calendar-tools"><div class="month-nav"><button id="prev" class="icon" aria-label="前の期間">‹</button><h2 id="period"></h2><button id="next" class="icon" aria-label="次の期間">›</button><button id="today" class="outline small">基準日</button></div><div class="view-tabs" aria-label="表示形式"><button data-view="month" class="active" aria-pressed="true">月</button><button data-view="week" aria-pressed="false">週</button><button data-view="list" aria-pressed="false">一覧</button></div></div>
+   <div class="search-row"><label class="search-wrap"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="イベント名・会社名・会場で検索" aria-label="イベントを検索"></label><span id="result-meta" class="muted"></span></div>
+   <div class="calendar-layout"><div id="calendar"></div><aside class="day-panel"><div class="day-heading"><span class="eyebrow">SELECTED DAY</span><h3 id="selected-label"></h3><span id="day-count" class="muted"></span></div><div id="day-events"></div></aside></div>
+   <footer class="calendar-footer"><span><span class="legend-dot"></span> 日付を選択して詳細を表示</span><span>すべて日本時間（JST）</span></footer>
+  </section>
+  <div class="bottom-note"><p>公開日程のみを収録しています。会員限定・LINE限定情報や、開催変更をすべて反映できるものではありません。</p><span>Built with Perplexity Computer</span></div>
+ </main>
+</div>
+<dialog id="detail"><div id="detail-content"></div><form method="dialog"><button class="close-dialog" aria-label="閉じる">×</button></form></dialog>
+<dialog id="sources"><div class="modal-head"><span class="eyebrow">DATA & SOURCES</span><h2>収録情報について</h2></div><div class="modal-body"><p>対象は2026年9月16日以降、ご指定の6社・サービスの公開イベントです。前回の調査結果と今回確認したTalent Laboの日程を統合しました。</p><div id="source-list"></div><h3>情報の区分</h3><p><b>公式</b>：主催者・公式イベントページの公開日程。<br><b>他社主催</b>：社長メシに掲載された企業側のイベント。<br><b>二次情報／要確認</b>：前回調査のネオキャリア掲載日程。初期状態では非表示です。</p><h3>収録上の注意</h3><p>同じ日・同じシリーズ・同じ会場の午前／午後を1件として集約。確定時刻が不明な場合はAM・PM・未確認で表示し、架空の時刻を補っていません。参加資格や受付状況は確認元をご覧ください。</p><p>DEiBAの参考日程には2027年1月24日・25日の曜日不整合があります。社長メシ掲載のGRIT就活も本文の曜日に不整合があり、主催者LPの日付を優先しています。</p><p>Talent Laboの会社表示はご指定の対応関係に基づきます。日時は公式LPと参加フォームで確認しています。</p><p>このカレンダーは2026年9月16日の確認情報を保存したもので、自動巡回・自動更新は行いません。</p></div><form method="dialog"><button class="close-dialog" aria-label="収録情報を閉じる">×</button></form></dialog>
+</body></html>
