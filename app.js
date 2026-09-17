@@ -6,7 +6,17 @@ const parse=s=>new Date(s+"T12:00:00+09:00");
 const iso=d=>`${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,"0")}-${String(d.getUTCDate()).padStart(2,"0")}`;
 const shift=(s,n)=>{const d=parse(s);d.setUTCDate(d.getUTCDate()+n);return iso(d)};
 const label=s=>{const d=parse(s);return `${d.getUTCMonth()+1}月${d.getUTCDate()}日（${"日月火水木金土"[d.getUTCDay()]}）`};
-const state={selected:"2026-09-17",anchor:asof,view:"month",selectedCompanies:new Set(companies.map(c=>c.id)),query:"",area:"",other:true,reference:false,ended:true};
+const today=()=>new Intl.DateTimeFormat("sv-SE",{timeZone:"Asia/Tokyo",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());
+function hasEnded(e,now=new Date()){
+ const day=new Intl.DateTimeFormat("sv-SE",{timeZone:"Asia/Tokyo",year:"numeric",month:"2-digit",day:"2-digit"}).format(now);
+ if(e.date<day)return true;
+ if(e.date>day)return false;
+ const ranges=[...e.time.matchAll(/(\d{1,2}:\d{2})\s*[～〜~–-]\s*(\d{1,2}:\d{2})/g)];
+ if(!ranges.length)return false;
+ const end=ranges.map(m=>m[2].padStart(5,"0")).sort().at(-1);
+ return now.getTime()>=new Date(`${e.date}T${end}:00+09:00`).getTime();
+}
+const state={selected:today(),anchor:today(),view:"month",selectedCompanies:new Set(companies.map(c=>c.id)),query:"",area:"",other:true,reference:false,ended:true};
 function bounds(){
  const d=parse(state.anchor),y=d.getUTCFullYear(),m=d.getUTCMonth();
  if(state.view==="week"){const start=shift(state.anchor,-d.getUTCDay());return [start,shift(start,6)]}
@@ -16,7 +26,7 @@ function filtered(){
  const q=state.query.trim().toLowerCase();
  return events.filter(e=>state.selectedCompanies.has(e.company)&&(!state.area||state.area===e.area)
  &&(state.other||e.status!=="他社主催")&&(state.reference||!["二次情報","要確認"].includes(e.status))
- &&(state.ended||e.date!==asof)
+ &&(state.ended||!hasEnded(e))
  &&(!q||[e.title,e.host,e.venue,e.time,company(e.company).name,company(e.company).label,e.date].join(" ").toLowerCase().includes(q)));
 }
 function shortTitle(e){
@@ -27,8 +37,13 @@ function shortTitle(e){
  if(e.company==="shabell")return (e.title.includes("フェスタ")?"しゃべるFES":"しゃべる")+" "+e.area;
  return e.host==="社長メシ"?"社長メシ":e.host;
 }
-function card(e){return `<button class="event-card" data-event="${e.id}" style="--company:${company(e.company).color}" aria-label="${esc(e.title)}の詳細"><span class="event-meta"><i class="company-dot"></i>${esc(company(e.company).name)}</span><h3>${esc(e.title)}</h3><div class="time">${esc(e.time==="n.a."?"時間未確認":e.time)}</div><div class="venue">${esc(e.venue)}</div><span class="tag ${e.status==="要確認"?"warn":""}">${esc(e.status)}${e.date===asof?" · 終了時刻経過":""}</span></button>`}
+function card(e){return `<button class="event-card" data-event="${e.id}" style="--company:${company(e.company).color}" aria-label="${esc(e.title)}の詳細"><span class="event-meta"><i class="company-dot"></i>${esc(company(e.company).name)}</span><h3>${esc(e.title)}</h3><div class="time">${esc(e.time==="n.a."?"時間未確認":e.time)}</div><div class="venue">${esc(e.venue)}</div><span class="tag ${e.status==="要確認"?"warn":""}">${esc(e.status)}${hasEnded(e)?" · 終了時刻経過":""}</span></button>`}
 function setup(){
+ $(".snapshot").textContent=`公開情報 · ${asof.replaceAll("-",".")} 巡回確認`;
+ const dates=events.map(e=>e.date).sort();
+ $("#range").textContent=dates.length?`${dates[0].slice(0,7).replace("-",".")} ～ ${dates.at(-1).slice(0,7).replace("-",".")}`:"未収録";
+ $("#update-note").textContent=`毎日9時（日本時間）に公開情報を確認する設定です。直近の6サイト巡回確認日：${asof}。取得・公開処理が遅延または失敗する場合があります。受付状況は確認元をご覧ください。`;
+ $("#source-intro").textContent=`${companies.length}社・サービスの公開イベントを収録しています。収録開始日：${dates[0]||"未収録"}。過去日程は履歴として保持しています。`;
  document.documentElement.dataset.theme=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";
  $("#companies").innerHTML=companies.map(c=>`<label class="company-filter" style="--company:${c.color}"><input type="checkbox" value="${c.id}" checked aria-label="${esc(c.name)}を表示"><span class="company-copy"><strong>${esc(c.name)}</strong><small>${esc(c.label)}</small></span><span class="company-count">${events.filter(e=>e.company===c.id&&!["二次情報","要確認"].includes(e.status)).length}</span></label>`).join("");
  [...new Set(events.map(e=>e.area))].sort().forEach(a=>{$("#area").insertAdjacentHTML("beforeend",`<option value="${esc(a)}">${esc(a)}</option>`)});
@@ -41,7 +56,7 @@ function setup(){
  $("#search").oninput=e=>{state.query=e.target.value;render()};
  $("#reset").onclick=reset;
  $("#prev").onclick=()=>move(-1);$("#next").onclick=()=>move(1);
- $("#today").onclick=()=>{state.anchor=asof;state.selected=asof;render()};
+ $("#today").onclick=()=>{state.anchor=today();state.selected=today();render()};
  $$("[data-view]").forEach(b=>b.onclick=()=>{state.view=b.dataset.view;render()});
  $("#theme").onclick=()=>{document.documentElement.dataset.theme=document.documentElement.dataset.theme==="dark"?"light":"dark"};
  $("#info").onclick=()=>$("#sources").showModal();
@@ -74,7 +89,7 @@ function renderMonth(all,start,end){
  let html='<div class="weekdays">'+[..."日月火水木金土"].map(s=>`<span class="weekday">${s}</span>`).join("")+'</div><div class="month-grid">';
  for(let i=0;i<count;i++){
   const day=shift(first,i),items=all.filter(e=>e.date===day),outside=day<start||day>end;
-  html+=`<div class="day-cell ${outside?"outside":""} ${day===state.selected?"selected":""}"><button data-date="${day}" class="day-button ${day===asof?"today":""}" aria-label="${day}、${items.length}件">${parse(day).getUTCDate()}</button>`;
+  html+=`<div class="day-cell ${outside?"outside":""} ${day===state.selected?"selected":""}"><button data-date="${day}" class="day-button ${day===today()?"today":""}" aria-label="${day}、${items.length}件">${parse(day).getUTCDate()}</button>`;
   html+=items.slice(0,3).map(e=>`<button class="event-chip ${["二次情報","要確認"].includes(e.status)?"reference":""}" style="--company:${company(e.company).color}" data-event="${e.id}" title="${esc(e.title+"／"+e.time)}">${e.status==="要確認"?"! ":e.status==="二次情報"?"参考 ":""}${esc(shortTitle(e))}</button>`).join("");
   if(items.length>3)html+=`<button class="more-btn" data-date="${day}">+${items.length-3}件</button>`;
   html+="</div>";
@@ -83,7 +98,7 @@ function renderMonth(all,start,end){
 }
 function renderWeek(all,start){
  let html='<div class="week-grid">';
- for(let i=0;i<7;i++){const day=shift(start,i),list=all.filter(e=>e.date===day);html+=`<section class="week-col"><button class="day-button ${day===asof?"today":""}" data-date="${day}">${label(day)}</button>`+list.map(e=>`<button class="week-event" data-event="${e.id}" style="--company:${company(e.company).color}"><b>${esc(company(e.company).name)}</b>${esc(e.title)}<small>${esc(e.time==="n.a."?"時間未確認":e.time)}<br>${esc(e.area)} · ${esc(e.status)}</small></button>`).join("")+(!list.length?'<div class="empty">予定なし</div>':"")+"</section>"}
+ for(let i=0;i<7;i++){const day=shift(start,i),list=all.filter(e=>e.date===day);html+=`<section class="week-col"><button class="day-button ${day===today()?"today":""}" data-date="${day}">${label(day)}</button>`+list.map(e=>`<button class="week-event" data-event="${e.id}" style="--company:${company(e.company).color}"><b>${esc(company(e.company).name)}</b>${esc(e.title)}<small>${esc(e.time==="n.a."?"時間未確認":e.time)}<br>${esc(e.area)} · ${esc(e.status)}</small></button>`).join("")+(!list.length?'<div class="empty">予定なし</div>':"")+"</section>"}
  $("#calendar").innerHTML=html+"</div>";
 }
 function renderList(list){
@@ -93,6 +108,7 @@ function renderList(list){
 function showEvent(e){
  const c=company(e.company),uncertain=e.status==="要確認";
  $("#detail-content").innerHTML=`<div class="event-meta" style="--company:${c.color}"><i class="company-dot"></i>${esc(c.name)}<span class="tag ${uncertain?"warn":""}">${esc(e.status)}</span></div><h2>${esc(e.title)}</h2><dl class="detail-fields"><dt>開催日</dt><dd>${e.date.slice(0,4)}年 ${label(e.date)}${uncertain?"<br><b>原表に日付・曜日の不整合。確定日ではありません。</b>":""}</dd><dt>時間</dt><dd>${esc(e.time==="n.a."?"未確認（時刻の補完なし）":e.time)}<small>（日本時間）</small></dd><dt>開催地</dt><dd>${esc(e.venue)}</dd><dt>主催・掲載</dt><dd>${esc(e.host)}${e.status==="他社主催"?"<br><small>社長メシの運営会社主催ではありません。</small>":""}</dd><dt>対象</dt><dd>${e.note.includes("全学年")?"全学年":e.note.includes("28卒")||["deiba","cheer","shabell","talent","jobtv"].includes(e.company)?"28卒向け（詳細は確認元を参照）":"確認元の募集条件をご確認ください"}</dd></dl><div class="detail-note">${e.date===asof?"本日分は依頼時点（19:50）で終了時刻を過ぎています。<br>":""}${esc(e.note||"開催内容・会場詳細は確認元で最新情報をご確認ください。")}<br>確認日：2026年9月16日</div><a class="source-cta" href="${esc(e.source)}" target="_blank" rel="noopener noreferrer">確認元のイベントページを開く ↗</a><p class="source-caption">${e.status==="二次情報"||uncertain?"採用支援会社掲載の参考情報です。主催者への再確認が必要です。":"開催・募集状況はリンク先でご確認ください。"}</p>`;
+ $("#detail-content .detail-note").textContent=`${hasEnded(e)?"終了時刻を経過しています。\n":""}${e.note||"開催内容・会場詳細は確認元で最新情報をご確認ください。"}\n巡回確認日：${asof}（参考日程は公式未確認のまま保持）`;
  $("#detail").showModal();
 }
 function exportCSV(){
@@ -101,3 +117,4 @@ function exportCSV(){
  const blob=new Blob([csv],{type:"text/csv;charset=utf-8"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="就活イベントカレンダー_表示対象.csv";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 setup();
+setInterval(render,60000);
