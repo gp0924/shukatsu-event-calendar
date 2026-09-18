@@ -1,5 +1,5 @@
 window.CALENDAR_DATA={
-  "asof": "2026-09-17",
+  "asof": "2026-09-18",
   "companies": [
     {
       "id": "talent",
@@ -105,7 +105,7 @@ window.CALENDAR_DATA={
       "venue": "東京・渋谷または恵比寿",
       "time": "18:00～20:00",
       "status": "他社主催",
-      "note": "依頼対象の運営会社が主催するイベントとは区別。公開一覧の日本時間表示。タイトル一部短縮。",
+      "note": "依頼対象の運営会社が主催するイベントとは区別。公開一覧の日本時間表示。タイトル一部短縮。2026-09-18に公式詳細で「募集終了」を確認。開催中止の告知ではないため日程は保持。",
       "source": "https://app.shachomeshi.com/event-detail/3amY20BXkx",
       "host": "TAPP",
       "id": "evt-005"
@@ -384,6 +384,19 @@ window.CALENDAR_DATA={
       "id": "evt-026"
     },
     {
+      "date": "2026-10-05",
+      "company": "meshi",
+      "title": "ものづくりで、社長になりたい人へ。",
+      "area": "東京",
+      "venue": "恵比寿駅周辺",
+      "time": "18:00～20:00",
+      "status": "他社主催",
+      "note": "28卒対象。社長メシ掲載企業主催。2026-09-18に公式詳細を日本時間で確認。",
+      "source": "https://app.shachomeshi.com/event-detail/VOaoP5iJKs",
+      "host": "株式会社ティグラ",
+      "id": "evt-141"
+    },
+    {
       "date": "2026-10-07",
       "company": "deiba",
       "title": "28卒｜大手内定者が語る ES・面接突破のリアル",
@@ -486,6 +499,19 @@ window.CALENDAR_DATA={
       "source": "https://app.shachomeshi.com/event-detail/cQpZuumyHz",
       "host": "丸楽紙業",
       "id": "evt-034"
+    },
+    {
+      "date": "2026-10-16",
+      "company": "meshi",
+      "title": "【入社5年で年収1,000万円が目指せます】成長しながら稼げる自分を目指しませんか",
+      "area": "東京",
+      "venue": "渋谷駅または品川駅周辺",
+      "time": "19:00～21:00",
+      "status": "他社主催",
+      "note": "28卒対象。社長メシ掲載企業主催。2026-09-18に公式詳細を日本時間で確認。",
+      "source": "https://app.shachomeshi.com/event-detail/vvcCDfEEDb",
+      "host": "株式会社アメックス",
+      "id": "evt-142"
     },
     {
       "date": "2026-10-17",
