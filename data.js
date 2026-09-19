@@ -1,5 +1,5 @@
 window.CALENDAR_DATA={
-  "asof": "2026-09-18",
+  "asof": "2026-09-19",
   "companies": [
     {
       "id": "talent",
@@ -592,6 +592,32 @@ window.CALENDAR_DATA={
       "id": "evt-040"
     },
     {
+      "id": "evt-143",
+      "date": "2026-10-19",
+      "company": "meshi",
+      "title": "エンタメ好きで終わるか、仕掛ける側に行くか？FIREBUG社長と本音で話す夜",
+      "area": "東京",
+      "venue": "代々木駅周辺",
+      "time": "18:30～20:30",
+      "status": "他社主催",
+      "note": "1～3年生対象。2026-09-19に公式詳細を日本時間で確認。",
+      "source": "https://app.shachomeshi.com/event-detail/8eZBdum1GE",
+      "host": "株式会社FIREBUG"
+    },
+    {
+      "id": "evt-144",
+      "date": "2026-10-20",
+      "company": "meshi",
+      "title": "あのメンバーとリアルで話そう！社長メシ",
+      "area": "東京",
+      "venue": "秋葉原駅",
+      "time": "18:00～20:00",
+      "status": "他社主催",
+      "note": "28卒対象。2026-09-19に公式詳細を日本時間で確認。",
+      "source": "https://app.shachomeshi.com/event-detail/fcKiGIvEkz",
+      "host": "株式会社A.ver"
+    },
+    {
       "date": "2026-10-23",
       "company": "jobtv",
       "title": "JOBTV Summit",
@@ -670,14 +696,40 @@ window.CALENDAR_DATA={
       "id": "evt-046"
     },
     {
+      "id": "evt-145",
+      "date": "2026-10-26",
+      "company": "meshi",
+      "title": "「1年目から主役」は当たり前。300億企業の役員と語る、最速のキャリア戦略。",
+      "area": "東京",
+      "venue": "渋谷駅または恵比寿駅周辺",
+      "time": "18:00～20:00",
+      "status": "他社主催",
+      "note": "全学年対象。2026-09-19に公式詳細を日本時間で確認。9月24日回とは別のイベントIDで掲載。",
+      "source": "https://app.shachomeshi.com/event-detail/3raxKBASWB",
+      "host": "株式会社TAPP"
+    },
+    {
+      "id": "evt-146",
+      "date": "2026-10-26",
+      "company": "meshi",
+      "title": "【28卒・選考直結】日本企業の0.4%になれ。42年かかる100億を、3年でつくった会社の話",
+      "area": "東京",
+      "venue": "渋谷駅 道玄坂周辺",
+      "time": "19:30～21:00",
+      "status": "他社主催",
+      "note": "28卒対象。2026-09-19に公式詳細を日本時間で確認。",
+      "source": "https://app.shachomeshi.com/event-detail/QRIcJCwNne",
+      "host": "株式会社SARUCREW"
+    },
+    {
       "date": "2026-10-27",
       "company": "meshi",
       "title": "就活メシMEGA～人生を変える食卓の記録～",
       "area": "東京",
       "venue": "東京・渋谷周辺",
-      "time": "13:00～18:00",
+      "time": "13:00開始・終了時刻要確認",
       "status": "公式",
-      "note": "全学年。日本時間の公開画面で確認。",
+      "note": "全学年。2026-09-19確認：既存ページは13:00～18:00、同日・同名称・渋谷の運営公式別掲載は13:00～17:00（本文は17:00～閉会式）で不一致。日程変更とは断定せず、同一イベントの重複候補として1件に集約。終了時刻は主催者へ要確認。追加根拠：https://app.shachomeshi.com/event-detail/t2XLClY2i4",
       "source": "https://app.shachomeshi.com/event-detail/M6xYEASlpq",
       "host": "社長メシ",
       "id": "evt-047"
